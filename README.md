@@ -87,16 +87,21 @@ Adjust these flags depending on your target.
 
 ## Hello, world!
 
-Export host Rust with target libraries:
+Export path to your host Rust binaries and libraries as well as the path to your
+custom target JSON file:
 
     export PATH=$PWD/rust/bin:$PATH
     export LD_LIBRARY_PATH=$PWD/rust/lib
     export RUST_TARGET_PATH=$PWD/cfg
 
+Cargo the hello example app:
+
     cargo new --bin hello
     cd hello
     cargo build --target=armv5te-unknown-linux-gnueabi --release
-    
+
+Check:
+
     file target/armv5te-unknown-linux-gnueabi/release/hello
       target/armv5te-unknown-linux-gnueabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for GNU/Linux 2.6.32, not stripped
 
