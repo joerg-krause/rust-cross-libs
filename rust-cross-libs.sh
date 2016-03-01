@@ -75,7 +75,7 @@ mkdir -p "$BUILD/libbacktrace"
     RANLIB="${AR} s" \
     CFLAGS="${CFLAGS} -fno-stack-protector" \
         "${RUST_GIT}/src/libbacktrace/configure" \
-            --target=${TARGET} \
+            --build=${TARGET} \
             --host=${HOST}
     make -j8 INCDIR=${RUST_GIT}/src/libbacktrace
 )
@@ -101,12 +101,12 @@ $(foreach crate,$(CRATES),$(eval $(call BUILD_CRATE,$(crate))))
 EOF
 
 # Build the Rust std library
-make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" std CFG_DISABLE_JEMALLOC=1
+make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" core alloc libc alloc_system rustc_unicode collections rand std CFG_DISABLE_JEMALLOC=1
 
 # Install to destination
 TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
 rm -rf ${TARGET_LIB_DIR}
 mkdir -p ${TARGET_LIB_DIR}
-mv ${BUILD}/*.rlib ${BUILD}/*.so ${BUILD}/*.a ${TARGET_LIB_DIR}
+mv ${BUILD}/*.rlib ${BUILD}/*.a ${TARGET_LIB_DIR}
 
 echo "Libraries are in ${TARGET_LIB_DIR}"
