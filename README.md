@@ -72,8 +72,8 @@ Define your host triple:
 
 Define your cross compiler and linker:
 
-    $ export CC=$HOME/cross/usr/bin/arm-linux-gcc
-    $ export AR=$HOME/cross/usr/bin/arm-linux-ar
+    $ export CC=/usr/local/bin/arm-linux-gcc
+    $ export AR=/usr/local/bin/arm-linux-ar
 
 Define the `CFLAGS` to build the compiler-rt and libbacktrace libraries with:
 
