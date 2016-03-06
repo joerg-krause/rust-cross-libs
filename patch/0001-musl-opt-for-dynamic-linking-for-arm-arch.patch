@@ -1,0 +1,25 @@
+From 3e8e7359cf8ae20d3f913d46c3dcee9eb535e094 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=B6rg=20Krause?= <joerg.krause@embedded.rocks>
+Date: Mon, 7 Mar 2016 00:04:20 +0100
+Subject: [PATCH] musl: opt for dynamic linking for arm arch
+
+---
+ src/unix/mod.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/unix/mod.rs b/src/unix/mod.rs
+index 0f70834..c9d8a80 100644
+--- a/src/unix/mod.rs
++++ b/src/unix/mod.rs
+@@ -139,7 +139,7 @@ cfg_if! {
+     if #[cfg(not(stdbuild))] {
+         // cargo build, don't pull in anything extra as the libstd  dep
+         // already pulls in all libs.
+-    } else if #[cfg(all(target_env = "musl", not(target_arch = "mips")))] {
++    } else if #[cfg(all(target_env = "musl", not(any(target_arch = "mips", target_arch = "arm"))))] {
+         #[link(name = "c", kind = "static")]
+         extern {}
+     } else if #[cfg(target_os = "emscripten")] {
+-- 
+2.7.2
+
