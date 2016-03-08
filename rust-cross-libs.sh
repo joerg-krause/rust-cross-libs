@@ -54,6 +54,9 @@ cd ${RUST_GIT}
 git checkout ${RUST_VERSION} || (git fetch; git checkout ${RUST_VERSION})
 git submodule update --init src/compiler-rt src/liblibc
 
+# Patch libc
+cd src/liblibc && git am ${TOPDIR}/patch/* && cd ../..
+
 # Build compiler-rt
 mkdir -p ${BUILD}/comprt
 make -j8 -C ${RUST_GIT}/src/compiler-rt \
