@@ -104,7 +104,9 @@ $(foreach crate,$(CRATES),$(eval $(call BUILD_CRATE,$(crate))))
 EOF
 
 # Build the Rust std library
-make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" core alloc libc alloc_system rustc_unicode collections rand std CFG_DISABLE_JEMALLOC=1
+DEPS_std="core libc rand alloc alloc_system rustc_unicode collections"
+
+make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" ${DEPS_std} std CFG_DISABLE_JEMALLOC=1
 
 # Install to destination
 TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
