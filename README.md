@@ -87,6 +87,43 @@ Adjust these flags depending on your target.
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-gnueabi/lib
 
+## Cross-compile with Cargo
+
+For cross-compiling with Cargo we need to make sure to link with the target
+libraries and not with the host ones. [Buildroot](https://buildroot.org/) is a
+great build tool for generate embedded Linux system. The `sysroot` directory
+from the Buildroot output directory is used for linking with the target
+libraries.
+
+To allow using a sysroot directory with Cargo lets create an executable shell
+script.
+
+Example for musl based toolchain:
+
+```
+$ cat $HOME/arm-unknown-linux-musl-sysroot
+#!/bin/bash
+
+SYSROOT=$HOME/buildroot/output/host/usr/arm-buildroot-linux-musleabi/sysroot
+
+/usr/local/bin/arm-linux-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
+
+$ chmod +x $HOME/arm-unknown-linux-musl-sysroot
+```
+
+Now we can tell Cargo to use this shell script when linking:
+
+```
+$ cat ~/.cargo/config
+[target.armv5te-unknown-linux-gnueabi]
+linker = "$HOME/arm-unknown-linux-gnueabi-sysroot"
+ar = "/usr/local/bin/arm-linux-ar"
+
+[target.armv5te-unknown-linux-musl]
+linker = "$HOME/arm-unknown-linux-musl-sysroot"
+ar = "/usr/local/bin/arm-linux-ar"
+```
+
 ## Hello, world!
 
 Export path to your host Rust binaries and libraries as well as the path to your
