@@ -32,7 +32,7 @@
   "is-like-msvc": false,
   "linker-is-gnu": true,
   "has-rpath": true,
-  "no-compiler-rt": true,
+  "no-compiler-rt": false,
   "no-default-libraries": true,
   "position-independent-executables": false,
   "pre-link-objects-exe": [],
