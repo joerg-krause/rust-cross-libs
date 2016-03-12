@@ -12,7 +12,7 @@
   "pre-link-args": [],
   "post-link-args": [],
   "cpu": "arm926ej-s",
-  "features": "+v5te",
+  "features": "+v5te,+dsp,+soft-float,+strict-align,-crypto,-neon",
   "dynamic-linking": true,
   "executables": true,
   "relocation-model": "pic",
