@@ -60,7 +60,7 @@ Rust nightly version.
 We fetch the Rust sources from github and get the binaries from the latest
 snapshot to run on your host, e.g. for x86_64-unknown-linux-gnu:
 
-    $ mkdir rust-cross-libs
+    $ git clone https://github.com/joerg-krause/rust-cross-libs.git
     $ cd rust-cross-libs
     $ git clone https://github.com/rust-lang/rust rust-git
     $ wget https://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz
