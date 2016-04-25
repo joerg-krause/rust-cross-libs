@@ -22,7 +22,7 @@ This guide assumes you are using a x64_86 host to cross-compile the Rust
 While it not possible to cross-compile Rust for an unsupported target unless
 you hack it, Rust offers the possibility to use custom targets with `rustc`:
 
-From the Rust docs:
+From the [Rust docs](http://doc.rust-lang.org/1.1.0/rustc_back/target/index.html#using-custom-targets):
 
 > 
 A target triple, as passed via `rustc --target=TRIPLE`, will first be
