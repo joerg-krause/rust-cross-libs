@@ -3,6 +3,13 @@
 Cross-compile the Rust standard library for unsupported targets without a
 full bootstrap build.
 
+Latest build:
+
+```
+$ rustc -V
+rustc 1.10.0-nightly (b5ba5923f 2016-04-21)
+```
+
 Thanks to Kevin Mehall: https://gist.github.com/kevinmehall/16e8b3ea7266b048369d
 
 ## Introduction
