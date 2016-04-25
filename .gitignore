@@ -1,0 +1,8 @@
+# Files
+rust-nightly-x86_64-unknown-linux-gnu.tar.gz
+
+# Directories
+build
+rust-git
+rust-nightly-x86_64-unknown-linux-gnu
+rust
