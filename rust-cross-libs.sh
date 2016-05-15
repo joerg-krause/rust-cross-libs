@@ -54,9 +54,12 @@ cd ${RUST_GIT}
 git checkout ${RUST_VERSION} || (git fetch; git checkout ${RUST_VERSION})
 git submodule update --init src/compiler-rt src/liblibc
 
+# Get the number of CPUs, default to 1
+N=`getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`
+
 # Build compiler-rt
 mkdir -p ${BUILD}/comprt
-make -j8 -C ${RUST_GIT}/src/compiler-rt \
+make -j${N} -C ${RUST_GIT}/src/compiler-rt \
     ProjSrcRoot=${RUST_GIT}/src/compiler-rt \
     ProjObjRoot="$(realpath ${BUILD}/comprt)" \
     CC="${CC}" \
@@ -77,7 +80,7 @@ mkdir -p "$BUILD/libbacktrace"
         "${RUST_GIT}/src/libbacktrace/configure" \
             --build=${TARGET} \
             --host=${HOST}
-    make -j8 INCDIR=${RUST_GIT}/src/libbacktrace
+    make -j${N} INCDIR=${RUST_GIT}/src/libbacktrace
 )
 mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 
@@ -103,7 +106,7 @@ EOF
 # Build the Rust std library
 DEPS_std="core libc rand alloc alloc_system panic_abort panic_unwind unwind rustc_unicode collections"
 
-make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" ${DEPS_std} std CFG_DISABLE_JEMALLOC=1
+make -j${N} -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" ${DEPS_std} std CFG_DISABLE_JEMALLOC=1
 
 # Install to destination
 TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
