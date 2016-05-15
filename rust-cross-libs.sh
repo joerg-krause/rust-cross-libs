@@ -101,7 +101,7 @@ $(foreach crate,$(CRATES),$(eval $(call BUILD_CRATE,$(crate))))
 EOF
 
 # Build the Rust std library
-DEPS_std="core libc rand alloc alloc_system rustc_unicode collections"
+DEPS_std="core libc rand alloc alloc_system panic_abort panic_unwind unwind rustc_unicode collections"
 
 make -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" ${DEPS_std} std CFG_DISABLE_JEMALLOC=1
 
