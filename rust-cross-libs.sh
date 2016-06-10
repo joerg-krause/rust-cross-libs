@@ -54,6 +54,9 @@ cd ${RUST_GIT}
 git checkout ${RUST_VERSION} || (git fetch; git checkout ${RUST_VERSION})
 git submodule update --init src/compiler-rt src/liblibc
 
+# Patch libc
+cd src/liblibc && git am ${TOPDIR}/patch/* && cd ../..
+
 # Get the number of CPUs, default to 1
 N=`getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`
 
