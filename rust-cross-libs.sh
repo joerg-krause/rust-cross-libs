@@ -92,6 +92,10 @@ cat > "${BUILD}/hack.mk" <<'EOF'
 RUSTC_OPTS = -C opt-level=2 --target=$(TARGET) \
       -L $(BUILD) --out-dir=$(BUILD) -C extra-filename=-$(FILENAME_EXTRA)
 
+define RUST_CRATE_DEPS
+RUST_DEPS_$(1) := $$(filter-out native:%,$$(DEPS_$(1)))
+endef
+
 define BUILD_CRATE
 $(1): $(RUST_DEPS_$(1))
 	$(RUSTC) $(CRATEFILE_$(1)) $(RUSTC_OPTS) $(RUSTFLAGS_$(1))
@@ -99,14 +103,26 @@ $(1): $(RUST_DEPS_$(1))
 .PHONY: $(1)
 endef
 
+$(foreach crate,$(CRATES),$(eval $(call RUST_CRATE_DEPS,$(crate))))
 $(foreach crate,$(CRATES),$(eval $(call BUILD_CRATE,$(crate))))
 
 EOF
 
-# Build the Rust std library
-DEPS_std="core libc rand alloc alloc_system panic_abort panic_unwind unwind rustc_unicode collections"
+DEPS_core=
+DEPS_alloc="core libc alloc_system"
+DEPS_alloc_system="core libc"
+DEPS_collections="core alloc rustc_unicode"
+DEPS_libc="core"
+DEPS_rand="core"
+DEPS_rustc_bitflags="core"
+DEPS_rustc_unicode="core"
+DEPS_panic_abort="libc alloc"
+DEPS_panic_unwind="libc alloc unwind"
+DEPS_unwind="libc"
 
-make -j${N} -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" ${DEPS_std} std CFG_DISABLE_JEMALLOC=1
+DEPS_std="core libc rand alloc collections rustc_unicode alloc_system panic_abort panic_unwind unwind"
+
+make -j${N} -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" std CFG_DISABLE_JEMALLOC=1
 
 # Install to destination
 TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
