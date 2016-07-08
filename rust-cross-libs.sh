@@ -62,16 +62,19 @@ N=`getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`
 
 # Build compiler-rt
 mkdir -p ${BUILD}/comprt
-make -j${N} -C ${RUST_GIT}/src/compiler-rt \
-    ProjSrcRoot=${RUST_GIT}/src/compiler-rt \
-    ProjObjRoot="$(realpath ${BUILD}/comprt)" \
-    CC="${CC}" \
-    AR="${AR}" \
-    RANLIB="${AR} s" \
-    CFLAGS="${CFLAGS}" \
-    TargetTriple=${TARGET} \
-    triple-builtins
-mv ${BUILD}/comprt/triple/builtins/libcompiler_rt.a ${BUILD}/libcompiler-rt.a
+(cd ${BUILD}/comprt &&
+	cmake ${RUST_GIT}/src/compiler-rt \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE=${TARGET} \
+		-DCOMPILER_RT_BUILD_SANITIZERS=OFF \
+		-DCOMPILER_RT_BUILD_EMUTLS=OFF \
+		-DCMAKE_C_COMPILER="${CC}" \
+		-G"Unix Makefiles"
+	cmake --build "${BUILD}/comprt" \
+		--target clang_rt.builtins-arm \
+		--config Release
+)
+mv ${BUILD}/comprt/lib/linux/libclang_rt.builtins-arm.a ${BUILD}/libcompiler-rt.a
 
 # Build libbacktrace
 mkdir -p "$BUILD/libbacktrace"
