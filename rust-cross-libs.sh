@@ -79,7 +79,7 @@ mv ${BUILD}/comprt/lib/linux/libclang_rt.builtins-arm.a ${BUILD}/libcompiler-rt.
 
 # Build libbacktrace
 rm -rf ${BUILD}/libbacktrace
-mkdir -p "$BUILD/libbacktrace"
+mkdir -p $BUILD/libbacktrace
 (cd ${BUILD}/libbacktrace &&
     CC="${CC}" \
     AR="${AR}" \
