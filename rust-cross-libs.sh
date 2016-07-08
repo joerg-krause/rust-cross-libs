@@ -61,6 +61,7 @@ cd src/liblibc && git am ${TOPDIR}/patch/* && cd ../..
 N=`getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`
 
 # Build compiler-rt
+rm -rf ${BUILD}/comprt
 mkdir -p ${BUILD}/comprt
 (cd ${BUILD}/comprt &&
 	cmake ${RUST_GIT}/src/compiler-rt \
@@ -77,6 +78,7 @@ mkdir -p ${BUILD}/comprt
 mv ${BUILD}/comprt/lib/linux/libclang_rt.builtins-arm.a ${BUILD}/libcompiler-rt.a
 
 # Build libbacktrace
+rm -rf ${BUILD}/libbacktrace
 mkdir -p "$BUILD/libbacktrace"
 (cd ${BUILD}/libbacktrace &&
     CC="${CC}" \
