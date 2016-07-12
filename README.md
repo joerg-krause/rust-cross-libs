@@ -67,10 +67,6 @@ snapshot to run on your host, e.g. for x86_64-unknown-linux-gnu:
     $ tar xf rust-nightly-x86_64-unknown-linux-gnu.tar.gz
     $ rust-nightly-x86_64-unknown-linux-gnu/install.sh --prefix=$PWD/rust
 
-If you're on Arch Linux or any other systen where `cpp` is not in `/lib`:
-
-    $ export CPP=/usr/bin/cpp
-
 ### Define the cross toolchain environment
 
 Define your host triple:
