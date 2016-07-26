@@ -24,7 +24,7 @@ you hack it, Rust offers the possibility to use custom targets with `rustc`:
 
 From the [Rust docs](http://doc.rust-lang.org/1.1.0/rustc_back/target/index.html#using-custom-targets):
 
-> 
+>
 A target triple, as passed via `rustc --target=TRIPLE`, will first be
 compared against the list of built-in targets. This is to ease distributing
 rustc (no need for configuration files) and also to hold these built-in
@@ -37,7 +37,7 @@ be loaded. If no file is found in any of those directories, a fatal error
 will be given. `RUST_TARGET_PATH` includes `/etc/rustc` as its last entry,
 to be searched by default.
 
-> 
+>
 Projects defining their own targets should use
 `--target=path/to/my-awesome-platform.json` instead of adding to
 `RUST_TARGET_PATH`.
