@@ -48,6 +48,11 @@ the target specification.
 
 ## Preparation
 
+### Requirements
+
+Cross-compiling compiler-rt requires `CMake` and `LLVM` to be installed on your
+host.
+
 ### Define your custom target
 
 I will use a custom target `armv5te-unknown-linux-gnueabi` to build a
