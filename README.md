@@ -153,6 +153,6 @@ Check:
     $ file target/armv5te-unknown-linux-gnueabi/release/hello
     target/armv5te-unknown-linux-gnueabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for GNU/Linux 2.6.32, not stripped
 
-    $ size target/armv5te-unknown-linux-gnueabi/release/hello
+    $ arm-linux-size target/armv5te-unknown-linux-gnueabi/release/hello
       text	   data	    bss	    dec	   hex	filename
     116935	   2308	     68	 119255  1d1d7	target/armv5te-unknown-linux-gnueabi/release/hello
