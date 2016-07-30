@@ -78,6 +78,10 @@ Define your host triple:
 
     $ export HOST=x86_64-unknown-linux-gnu
 
+Define your target triple, e.g:
+
+    $ export TARGET=armv5te-unknown-linux-musl
+
 Define your cross compiler and linker:
 
     $ export CC=/usr/local/bin/arm-linux-gcc
@@ -92,9 +96,9 @@ Adjust these flags depending on your target.
 
 ### Run the script
 
-    $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/armv5te-unknown-linux-gnueabi.json
+    $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json
     [..]
-    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-gnueabi/lib
+    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musl/lib
 
 ## Cross-compile with Cargo
 
@@ -146,13 +150,13 @@ Cargo the hello example app:
 
     $ cargo new --bin hello
     $ cd hello
-    $ cargo build --target=armv5te-unknown-linux-gnueabi --release
+    $ cargo build --target=$TARGET --release
 
 Check:
 
-    $ file target/armv5te-unknown-linux-gnueabi/release/hello
-    target/armv5te-unknown-linux-gnueabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for GNU/Linux 2.6.32, not stripped
+    $ file target/$TARGET/release/hello
+    target/armv5te-unknown-linux-musl/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-arm.so.1, not stripped
 
-    $ arm-linux-size target/armv5te-unknown-linux-gnueabi/release/hello
-      text	   data	    bss	    dec	   hex	filename
-    116935	   2308	     68	 119255  1d1d7	target/armv5te-unknown-linux-gnueabi/release/hello
+    $ arm-linux-size target/$TARGET/release/hello
+       text	   data	    bss	    dec	    hex	filename
+      94629	   3732	    204	  98565	  18105	target/armv5te-unknown-linux-musl/release/hello
