@@ -6,33 +6,33 @@ set -e
 for i in "$@"
 do
 case $i in
-    --rust-prefix=*)
-    RUST_PREFIX=$(readlink -f "${i#*=}")
-    shift
-    ;;
-    --rust-git=*)
-    RUST_GIT=$(readlink -f "${i#*=}")
-    shift
-    ;;
-    --target=*)
-    export TARGET_JSON=$(readlink -f "${i#*=}")
-    shift
-    ;;
-    *)
-        # unknown option
-    ;;
+	--rust-prefix=*)
+	RUST_PREFIX=$(readlink -f "${i#*=}")
+	shift
+	;;
+	--rust-git=*)
+	RUST_GIT=$(readlink -f "${i#*=}")
+	shift
+	;;
+	--target=*)
+	export TARGET_JSON=$(readlink -f "${i#*=}")
+	shift
+	;;
+	*)
+	# unknown option
+	;;
 esac
 done
 
 # Sanity-check args
 if [ ! -f ${RUST_PREFIX}/bin/rustc ]; then
-    echo ${RUST_PREFIX}/bin/rustc not found! Exit.
-    exit 1
+	echo ${RUST_PREFIX}/bin/rustc not found! Exit.
+	exit 1
 fi
 
 if [ ! -d ${RUST_GIT}/.git ]; then
-    echo No Rust git repository found! Exit.
-    exit 1
+	echo No Rust git repository found! Exit.
+	exit 1
 fi
 
 export TOPDIR=${PWD}
@@ -83,14 +83,14 @@ mv ${BUILD}/comprt/lib/linux/libclang_rt.builtins-arm.a ${BUILD}/libcompiler-rt.
 rm -rf ${BUILD}/libbacktrace
 mkdir -p $BUILD/libbacktrace
 (cd ${BUILD}/libbacktrace &&
-    CC="${CC}" \
-    AR="${AR}" \
-    RANLIB="${AR} s" \
-    CFLAGS="${CFLAGS} -fno-stack-protector" \
-        "${RUST_GIT}/src/libbacktrace/configure" \
-            --build=${TARGET} \
-            --host=${HOST}
-    make -j${N} INCDIR=${RUST_GIT}/src/libbacktrace
+	CC="${CC}" \
+	AR="${AR}" \
+	RANLIB="${AR} s" \
+	CFLAGS="${CFLAGS} -fno-stack-protector" \
+	"${RUST_GIT}/src/libbacktrace/configure" \
+		--build=${TARGET} \
+		--host=${HOST}
+	make -j${N} INCDIR=${RUST_GIT}/src/libbacktrace
 )
 mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 
@@ -100,7 +100,7 @@ mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 
 cat > "${BUILD}/hack.mk" <<'EOF'
 RUSTC_OPTS = -C opt-level=2 --target=$(TARGET) \
-      -L $(BUILD) --out-dir=$(BUILD) -C extra-filename=-$(FILENAME_EXTRA)
+	-L $(BUILD) --out-dir=$(BUILD) -C extra-filename=-$(FILENAME_EXTRA)
 
 define RUST_CRATE_DEPS
 RUST_DEPS_$(1) := $$(filter-out native:%,$$(DEPS_$(1)))
