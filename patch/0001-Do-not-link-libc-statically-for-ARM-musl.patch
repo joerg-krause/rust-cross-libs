@@ -1,4 +1,4 @@
-From 892c9dfc8037c87a45d4470f4e6ee96007ab7fa6 Mon Sep 17 00:00:00 2001
+From f9e26fb29d550d29e2d7593622fbfbd435732901 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?J=C3=B6rg=20Krause?= <joerg.krause@embedded.rocks>
 Date: Fri, 10 Jun 2016 22:09:29 +0200
 Subject: [PATCH] Do not link libc statically for ARM musl
@@ -12,19 +12,19 @@ Signed-off-by: Jörg Krause <joerg.krause@embedded.rocks>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/unix/mod.rs b/src/unix/mod.rs
-index 4460382..e60f3f4 100644
+index 314219e..37a88cd 100644
 --- a/src/unix/mod.rs
 +++ b/src/unix/mod.rs
-@@ -194,7 +194,8 @@ cfg_if! {
+@@ -197,7 +197,8 @@ cfg_if! {
      } else if #[cfg(all(not(stdbuild), feature = "use_std"))] {
          // cargo build, don't pull in anything extra as the libstd  dep
          // already pulls in all libs.
--    } else if #[cfg(any(all(target_env = "musl", not(target_arch = "mips")),
+-    } else if #[cfg(any(all(target_env = "musl", not(target_arch = "mips"))))] {
 +    } else if #[cfg(any(all(target_env = "musl", not(target_arch = "mips"),
-+                                                 not(target_arch = "arm")),
-                         target_env = "musleabi",
-                         target_env = "musleabihf"))] {
++                                                 not(target_arch = "arm"))))] {
          #[link(name = "c", kind = "static")]
+         extern {}
+     } else if #[cfg(target_os = "emscripten")] {
 -- 
-2.8.3
+2.9.3
 
