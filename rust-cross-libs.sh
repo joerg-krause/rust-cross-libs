@@ -462,6 +462,10 @@ $(foreach crate,$(CRATES),$(eval $(call BUILD_CRATE,$(crate))))
 
 EOF
 
+TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
+rm -rf ${TARGET_LIB_DIR}
+mkdir -p ${TARGET_LIB_DIR}
+
 DEPS_core=
 DEPS_alloc="core libc alloc_system"
 DEPS_alloc_system="core libc"
@@ -479,9 +483,6 @@ DEPS_std="core libc rand alloc collections rustc_unicode alloc_system panic_abor
 make -j${N} -f mk/util.mk -f mk/crates.mk -f "${BUILD}/hack.mk" std CFG_DISABLE_JEMALLOC=1
 
 # Install to destination
-TARGET_LIB_DIR=${RUSTLIB}/${TARGET}/lib
-rm -rf ${TARGET_LIB_DIR}
-mkdir -p ${TARGET_LIB_DIR}
 mv ${BUILD}/*.rlib ${BUILD}/*.a ${TARGET_LIB_DIR}
 
 echo "Libraries are in ${TARGET_LIB_DIR}"
