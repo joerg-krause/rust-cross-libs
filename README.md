@@ -14,13 +14,13 @@ Thanks to Kevin Mehall: https://gist.github.com/kevinmehall/16e8b3ea7266b048369d
 
 ## Introduction
 
-This guide assumes you are using a x64_86 host to cross-compile the Rust
-`std` library to an unsupported target.
+This guide assumes you are using an x64_86 host to cross-compile the Rust
+`std` library to an unsupported target, e.g. ARMv5.
 
 ### Using custom targets
 
-While it not possible to cross-compile Rust for an unsupported target unless
-you hack it, Rust offers the possibility to use custom targets with `rustc`:
+While it is not possible to cross-compile Rust for an unsupported target, unless
+you hack it, it offers the possibility to use custom targets with `rustc`:
 
 From the [Rust docs](http://doc.rust-lang.org/1.1.0/rustc_back/target/index.html#using-custom-targets):
 
@@ -42,15 +42,15 @@ Projects defining their own targets should use
 `--target=path/to/my-awesome-platform.json` instead of adding to
 `RUST_TARGET_PATH`.
 
-Unfortunatly, passing the JSON file path instead of using `RUST_TARGET_PATH`
-does not work, so the script internally uses `RUST_TARGET_PATH` to define
-the target specification.
+Unfortunately, passing the JSON file path to `rustc` instead of using
+`RUST_TARGET_PATH` does not work, so the script internally uses
+`RUST_TARGET_PATH` to define the target specification.
 
 ## Preparation
 
 ### Define your custom target
 
-I will use a custom target `armv5te-unknown-linux-gnueabi` to build a
+I will use a custom target `armv5te-unknown-linux-musl` to build a
 cross-compiled *"Hello, World!"* for an ARMv5TE soft-float target. Note that
 the provided JSON file defines every possible value you can with the current
 Rust nightly version.
@@ -58,7 +58,7 @@ Rust nightly version.
 ### Get Rust sources and binaries
 
 We fetch the Rust sources from github and get the binaries from the latest
-snapshot to run on your host, e.g. for x86_64-unknown-linux-gnu:
+snapshot to run on the host, e.g. for x86_64-unknown-linux-gnu:
 
     $ git clone https://github.com/joerg-krause/rust-cross-libs.git
     $ cd rust-cross-libs
@@ -69,11 +69,11 @@ snapshot to run on your host, e.g. for x86_64-unknown-linux-gnu:
 
 ### Define the cross toolchain environment
 
-Define your host triple:
+Define your host triple, e.g.:
 
     $ export HOST=x86_64-unknown-linux-gnu
 
-Define your target triple, e.g:
+Define your target triple, e.g.:
 
     $ export TARGET=armv5te-unknown-linux-musl
 
@@ -99,7 +99,7 @@ Adjust these flags depending on your target.
 
 For cross-compiling with Cargo we need to make sure to link with the target
 libraries and not with the host ones. [Buildroot](https://buildroot.org/) is a
-great build tool for generate embedded Linux system. The `sysroot` directory
+great tool for generating embedded Linux system. The `sysroot` directory
 from the Buildroot output directory is used for linking with the target
 libraries.
 
@@ -134,8 +134,8 @@ ar = "/usr/local/bin/arm-linux-ar"
 
 ## Hello, world!
 
-Export path to your host Rust binaries and libraries as well as the path to your
-custom target JSON file:
+Export the path to your host Rust binaries and libraries as well as the path to
+your custom target JSON file:
 
     $ export PATH=$PWD/rust/bin:$PATH
     $ export LD_LIBRARY_PATH=$PWD/rust/lib
