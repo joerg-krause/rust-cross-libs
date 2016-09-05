@@ -7,7 +7,7 @@ Latest build:
 
 ```
 $ rustc -V
-rustc 1.13.0-nightly (198713106 2016-08-26)
+rustc 1.13.0-nightly (91f057de3 2016-09-04)
 ```
 
 Thanks to Kevin Mehall: https://gist.github.com/kevinmehall/16e8b3ea7266b048369d
