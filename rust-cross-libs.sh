@@ -35,6 +35,31 @@ if [ ! -d ${RUST_GIT}/.git ]; then
 	exit 1
 fi
 
+if [ -z ${HOST} ]; then
+	echo Need to set HOST! Exit.
+	exit 1
+fi
+
+if [ -z ${TARGET} ]; then
+	echo Need to set TARGET! Exit.
+	exit 1
+fi
+
+if [ -z ${CC} ]; then
+	echo Need to set CC! Exit.
+	exit 1
+fi
+
+if [ -z ${AR} ]; then
+	echo Need to set AR! Exit.
+	exit 1
+fi
+
+if [ -z ${CFLAGS} ]; then
+	echo Need to set CFLAGS! Exit.
+	exit 1
+fi
+
 export TOPDIR=${PWD}
 export PATH=${RUST_PREFIX}/bin:${PATH}
 export LD_LIBRARY_PATH=${RUST_PREFIX}/lib
