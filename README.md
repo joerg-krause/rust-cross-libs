@@ -80,7 +80,6 @@ Define your target triple, e.g.:
 Define your cross compiler and linker:
 
     $ export CC=/usr/local/bin/arm-linux-gcc
-    $ export CXX=/usr/local/bin/arm-linux-g++
     $ export AR=/usr/local/bin/arm-linux-ar
 
 Define the `CFLAGS` to build the compiler-rt and libbacktrace libraries with:
