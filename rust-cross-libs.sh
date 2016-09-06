@@ -25,37 +25,37 @@ esac
 done
 
 # Sanity-check args
-if [ ! -f ${RUST_PREFIX}/bin/rustc ]; then
-	echo ${RUST_PREFIX}/bin/rustc not found! Exit.
+if [ ! -f "${RUST_PREFIX}"/bin/rustc ]; then
+	echo "${RUST_PREFIX}"/bin/rustc not found! Exit.
 	exit 1
 fi
 
-if [ ! -d ${RUST_GIT}/.git ]; then
+if [ ! -d "${RUST_GIT}"/.git ]; then
 	echo No Rust git repository found! Exit.
 	exit 1
 fi
 
-if [ -z ${HOST} ]; then
+if [ -z "${HOST}" ]; then
 	echo Need to set HOST! Exit.
 	exit 1
 fi
 
-if [ -z ${TARGET} ]; then
+if [ -z "${TARGET}" ]; then
 	echo Need to set TARGET! Exit.
 	exit 1
 fi
 
-if [ -z ${CC} ]; then
+if [ -z "${CC}" ]; then
 	echo Need to set CC! Exit.
 	exit 1
 fi
 
-if [ -z ${AR} ]; then
+if [ -z "${AR}" ]; then
 	echo Need to set AR! Exit.
 	exit 1
 fi
 
-if [ -z ${CFLAGS} ]; then
+if [ -z "${CFLAGS}" ]; then
 	echo Need to set CFLAGS! Exit.
 	exit 1
 fi
