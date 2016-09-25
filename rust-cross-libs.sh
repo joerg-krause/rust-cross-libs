@@ -18,6 +18,10 @@ case $i in
 	export TARGET_JSON=$(readlink -f "${i#*=}")
 	shift
 	;;
+	--opt-level=*)
+	OPT_LEVEL="${i#*=}"
+	shift
+	;;
 	*)
 	# unknown option
 	;;
@@ -72,6 +76,8 @@ export BUILD=${TOPDIR}/build
 
 export TARGET_JSON=$TARGET_JSON
 export TARGET=$(basename $TARGET_JSON .json)
+
+export OPT_LEVEL=${OPT_LEVEL:-"2"}
 
 rm -rf ${BUILD}
 mkdir -p ${BUILD}
@@ -468,7 +474,7 @@ mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 # TODO: use the makefile to build the C libs above
 
 cat > "${BUILD}/hack.mk" <<'EOF'
-RUSTC_OPTS = -C opt-level=2 --target=$(TARGET) \
+RUSTC_OPTS = -C opt-level=$(OPT_LEVEL) --target=$(TARGET) \
 	-L $(BUILD) --out-dir=$(BUILD) -C extra-filename=-$(FILENAME_EXTRA)
 
 define RUST_CRATE_DEPS
