@@ -94,6 +94,13 @@ Adjust these flags depending on your target.
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musl/lib
 
+Optionally, you can set the optimization level by adding the command line option
+`--opt-level` or by setting the environment variable `OPT_LEVEL`, e.g.:
+
+    $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json --opt-level=s
+
+If not set, the optimization defaults to `2`.
+
 ## Cross-compile with Cargo
 
 For cross-compiling with Cargo we need to make sure to link with the target
