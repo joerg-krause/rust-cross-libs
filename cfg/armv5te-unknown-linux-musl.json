@@ -45,5 +45,6 @@
   "lib-allocation-crate": "alloc_system",
   "exe-allocation-crate": "alloc_system",
   "allow-asm": true,
-  "has-elf-tls": false
+  "has-elf-tls": false,
+  "panic-strategy": "unwind"
 }
