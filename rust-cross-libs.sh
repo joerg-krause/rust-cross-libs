@@ -475,6 +475,7 @@ mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 
 cat > "${BUILD}/hack.mk" <<'EOF'
 RUSTC_OPTS = -C opt-level=$(OPT_LEVEL) --target=$(TARGET) \
+	-Z unstable-options -C target-feature=-crt-static \
 	-L $(BUILD) --out-dir=$(BUILD) -C extra-filename=-$(FILENAME_EXTRA)
 
 define RUST_CRATE_DEPS
