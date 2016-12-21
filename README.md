@@ -50,7 +50,7 @@ Unfortunately, passing the JSON file path to `rustc` instead of using
 
 ### Define your custom target
 
-I will use a custom target `armv5te-unknown-linux-musl` to build a
+I will use a custom target `armv5te-unknown-linux-musleabi` to build a
 cross-compiled *"Hello, World!"* for an ARMv5TE soft-float target. Note that
 the provided JSON file defines every possible value you can with the current
 Rust nightly version.
@@ -75,7 +75,7 @@ Define your host triple, e.g.:
 
 Define your target triple, e.g.:
 
-    $ export TARGET=armv5te-unknown-linux-musl
+    $ export TARGET=armv5te-unknown-linux-musleabi
 
 Define your cross compiler and linker:
 
@@ -92,7 +92,7 @@ Adjust these flags depending on your target.
 
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json
     [..]
-    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musl/lib
+    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
 
 Optionally, you can set the optimization level by adding the command line option
 `--opt-level` or by setting the environment variable `OPT_LEVEL`, e.g.:
@@ -133,7 +133,7 @@ $ cat ~/.cargo/config
 linker = "$HOME/arm-unknown-linux-gnueabi-sysroot"
 ar = "/usr/local/bin/arm-linux-ar"
 
-[target.armv5te-unknown-linux-musl]
+[target.armv5te-unknown-linux-musleabi]
 linker = "$HOME/arm-unknown-linux-musl-sysroot"
 ar = "/usr/local/bin/arm-linux-ar"
 ```
@@ -156,8 +156,8 @@ Cargo the hello example app:
 Check:
 
     $ file target/$TARGET/release/hello
-    target/armv5te-unknown-linux-musl/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-arm.so.1, not stripped
+    target/armv5te-unknown-linux-musleabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-arm.so.1, not stripped
 
     $ arm-linux-size target/$TARGET/release/hello
        text	   data	    bss	    dec	    hex	filename
-      94629	   3732	    204	  98565	  18105	target/armv5te-unknown-linux-musl/release/hello
+      94629	   3732	    204	  98565	  18105	target/armv5te-unknown-linux-musleabi/release/hello
