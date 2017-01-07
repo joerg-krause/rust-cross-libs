@@ -8,8 +8,6 @@
   "vendor": "unknown",
   "arch": "arm",
 
-  "linker": "/usr/local/bin/arm-linux-gcc",
-  "ar": "/usr/local/bin/arm-linux-ar",
   "pre-link-args": [],
   "post-link-args": [],
   "cpu": "arm926ej-s",
