@@ -67,39 +67,40 @@ snapshot to run on the host, e.g. for x86_64-unknown-linux-gnu:
     $ tar xf rust-nightly-x86_64-unknown-linux-gnu.tar.gz
     $ rust-nightly-x86_64-unknown-linux-gnu/install.sh --prefix=$PWD/rust
 
+### Define the Rust environment
+
+As we are running cargo and rustc from the nightly channel we have to set the
+correct environment:
+
+    $ export PATH=$PWD/rust/bin:$PATH
+    $ export LD_LIBRARY_PATH=$PWD/rust/lib
+    $ export RUST_TARGET_PATH=$PWD/cfg
+
 ### Define the cross toolchain environment
 
-Define your host triple, e.g.:
+Define your target triple, cross-compiler, and CFLAGS.
 
-    $ export HOST=x86_64-unknown-linux-gnu
-
-Define your target triple, e.g.:
+*armv5te-unknown-linux-musleabi*
 
     $ export TARGET=armv5te-unknown-linux-musleabi
-
-Define your cross compiler and linker:
-
     $ export CC=/usr/local/bin/arm-linux-gcc
     $ export AR=/usr/local/bin/arm-linux-ar
-
-Define the `CFLAGS` to build the compiler-rt and libbacktrace libraries with:
-
     $ export CFLAGS="-Wall -Os -fPIC -D__arm__ -mfloat-abi=soft"
 
-Adjust these flags depending on your target.
+*armv7a-unknown-linux-musleabihf*
+
+    $ export TARGET=armv7a-unknown-linux-musleabihf
+    $ export CC=/usr/local/bin/arm-unknown-linux-musleabihf-gcc
+    $ export AR=/usr/local/bin/arm-unknown-linux-musleabihf-ar
+    $ export CFLAGS="-Wall -Os -fPIC -D__arm__ -mfloat-abi=hard"
+
+Note, that you need to adjust these flags depending on your custom target.
 
 ### Run the script
 
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
-
-Optionally, you can set the optimization level by adding the command line option
-`--opt-level` or by setting the environment variable `OPT_LEVEL`, e.g.:
-
-    $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json --opt-level=s
-
-If not set, the optimization defaults to `2`.
 
 ## Cross-compile with Cargo
 
@@ -109,43 +110,58 @@ great tool for generating embedded Linux system. The `sysroot` directory
 from the Buildroot output directory is used for linking with the target
 libraries.
 
+### Sysroot
+
 To allow using a sysroot directory with Cargo lets create an executable shell
 script.
 
-Example for musl based toolchain:
+Example for *armv5te-unknown-linux-musleabi* target:
 
 ```
-$ cat $HOME/arm-unknown-linux-musl-sysroot
+$ cat /usr/local/bin/arm-unknown-linux-musl-sysroot
 #!/bin/bash
 
 SYSROOT=$HOME/buildroot/output/host/usr/arm-buildroot-linux-musleabi/sysroot
 
 /usr/local/bin/arm-linux-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
 
-$ chmod +x $HOME/arm-unknown-linux-musl-sysroot
+$ chmod +x /usr/local/bin/arm-unknown-linux-musl-sysroot
 ```
+
+Example for *armv7a-unknown-linux-musleabihf* target:
+
+```
+$ cat /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
+#!/bin/bash
+
+SYSROOT=/home/joerg/Development/git/buildroot/output/host/usr/arm-buildroot-linux-musleabihf/sysroot
+#SYSROOT=/home/joerg/Development/git/buildroot/output/host/usr/arm-buildroot-linux-musleabihf/sysroot
+
+/usr/local/bin/arm-unknown-linux-musleabihf-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
+
+$ chmod +x /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
+
+```
+
+### Cargo config
 
 Now we can tell Cargo to use this shell script when linking:
 
 ```
 $ cat ~/.cargo/config
-[target.armv5te-unknown-linux-gnueabi]
-linker = "$HOME/arm-unknown-linux-gnueabi-sysroot"
+[target.armv5te-unknown-linux-musleabi]
+linker = "/usr/local/bin/arm-unknown-linux-musl-sysroot"
 ar = "/usr/local/bin/arm-linux-ar"
 
-[target.armv5te-unknown-linux-musleabi]
-linker = "$HOME/arm-unknown-linux-musl-sysroot"
-ar = "/usr/local/bin/arm-linux-ar"
+[target.armv7a-unknown-linux-musleabihf]
+linker = "/usr/local/bin/arm-unknown-linux-musleabihf-sysroot"
+ar = "/usr/local/bin/arm-unknown-linux-musleabihf-ar"
 ```
 
 ## Hello, world!
 
 Export the path to your host Rust binaries and libraries as well as the path to
 your custom target JSON file:
-
-    $ export PATH=$PWD/rust/bin:$PATH
-    $ export LD_LIBRARY_PATH=$PWD/rust/lib
-    $ export RUST_TARGET_PATH=$PWD/cfg
 
 Cargo the hello example app:
 
@@ -160,4 +176,4 @@ Check:
 
     $ arm-linux-size target/$TARGET/release/hello
        text	   data	    bss	    dec	    hex	filename
-      94629	   3732	    204	  98565	  18105	target/armv5te-unknown-linux-musleabi/release/hello
+      59962	   1924	    132	  62018	   f242	target/armv5te-unknown-linux-musleabi/release/hello
