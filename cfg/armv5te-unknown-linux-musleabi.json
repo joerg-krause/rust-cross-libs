@@ -44,5 +44,5 @@
   "exe-allocation-crate": "alloc_system",
   "allow-asm": true,
   "has-elf-tls": false,
-  "panic-strategy": "unwind"
+  "panic-strategy": "abort"
 }
