@@ -80,6 +80,10 @@ correct environment:
 
 ### Define the cross toolchain environment
 
+Define your host, e.g. for a x64 linux host:
+
+    $ export HOST=x86_64-unknown-linux-gnu
+
 Define your target triple, cross-compiler, and CFLAGS.
 
 *armv5te-unknown-linux-musleabi*
@@ -100,7 +104,25 @@ Note, that you need to adjust these flags depending on your custom target.
 
 ### Run the script
 
+Two panic strategies are supported: abort and unwind. Although the panic strategy
+is already defined in the json target configuration, it is still necessary to take
+care of this setting.
+
+#### Panic strategy: Abort
+
+If your target uses the *abort* panic strategy, no additional parameter is required:
+
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json
+    [..]
+    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
+
+#### Panic strategy: Unwind
+
+For now, the build script needs to know when to build the std library with the
+*panic_unwind* strategy and the backtrace feature. Therefor, setting 
+`--panic=unwind` is required:
+
+    $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json --panic=unwind
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
 
