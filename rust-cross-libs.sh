@@ -18,6 +18,10 @@ case $i in
 	export TARGET_JSON=$(readlink -f "${i#*=}")
 	shift
 	;;
+	--panic=*)
+	PANIC_STRATEGY="${i#*=}"
+	shift
+	;;
 	--opt-level=*)
 	OPT_LEVEL="${i#*=}"
 	shift
@@ -36,6 +40,11 @@ fi
 
 if [ ! -d "${RUST_GIT}"/.git ]; then
 	echo No Rust git repository found! Exit.
+	exit 1
+fi
+
+if [ -z "${HOST}" ]; then
+	echo Need to set HOST! Exit.
 	exit 1
 fi
 
@@ -64,10 +73,13 @@ export RUSTLIB=${RUST_PREFIX}/lib/rustlib
 export RUSTC=${RUST_PREFIX}/bin/rustc
 export CARGO=${RUST_PREFIX}/bin/cargo
 
+export BUILD=${TOPDIR}/build
+
 export TARGET_JSON=$TARGET_JSON
 export TARGET=$(basename $TARGET_JSON .json)
 
 export OPT_LEVEL=${OPT_LEVEL:-"2"}
+export PANIC_STRATEGY=${PANIC_STRATEGY:-"abort"}
 
 # Get the number of CPUs, default to 1
 N=`getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`
@@ -85,12 +97,28 @@ git submodule update --init src/compiler-rt \
 	git am ${TOPDIR}/patch/*
 )
 
-(cd ${RUST_GIT}/src/libpanic_unwind &&
-	$CARGO build -j${N} --target=${TARGET} --release
+# Build libbacktrace
+rm -rf ${BUILD}/libbacktrace
+mkdir -p $BUILD/libbacktrace
+(cd ${BUILD}/libbacktrace &&
+	CC="${CC}" \
+	AR="${AR}" \
+	RANLIB="${AR} s" \
+	CFLAGS="${CFLAGS} -fno-stack-protector" \
+	"${RUST_GIT}/src/libbacktrace/configure" \
+		--build=${TARGET} \
+		--host=${HOST}
+	make -j${N} INCDIR=${RUST_GIT}/src/libbacktrace
 )
+mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
+
+if [ "$PANIC_STRATEGY" = "unwind" ]; then
+	export FEATURES="backtrace panic_unwind"
+fi
 
 (cd ${RUST_GIT}/src/libstd &&
-	$CARGO build -j${N} --target=${TARGET} --release
+	$CARGO clean
+	$CARGO build -j${N} --target=${TARGET} --release --features "${FEATURES}"
 )
 
 # Install to destination
