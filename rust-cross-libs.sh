@@ -94,7 +94,11 @@ git submodule update --init src/compiler-rt \
 
 # Patch libc
 (cd ${RUST_GIT}/src/liblibc &&
-	git am ${TOPDIR}/patch/*
+	git am ${TOPDIR}/patch/liblibc/*
+)
+# Patch libunwind
+(cd ${RUST_GIT}/src/libunwind &&
+	git am ${TOPDIR}/patch/libunwind/*
 )
 
 # Build libbacktrace

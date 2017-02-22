@@ -1,7 +1,7 @@
 From 52dfb5295a44f38c7dd24ed5feef35f6f46beddf Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?J=C3=B6rg=20Krause?= <joerg.krause@embedded.rocks>
 Date: Tue, 29 Nov 2016 23:51:07 +0100
-Subject: [PATCH 1/1] Do not link libc statically for ARM musl
+Subject: [PATCH 1/1] liblibc: do not link libc statically for ARM musl
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
