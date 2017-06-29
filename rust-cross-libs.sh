@@ -90,7 +90,10 @@ cd ${RUST_GIT}
 git checkout ${RUST_VERSION} || (git fetch; git checkout ${RUST_VERSION})
 git submodule update --init src/compiler-rt \
 			    src/jemalloc \
-			    src/liblibc
+			    src/liblibc \
+			    src/tools/rust-installer \
+			    src/tools/cargo \
+			    src/tools/rls
 
 # Patch libc
 (cd ${RUST_GIT}/src/liblibc &&
