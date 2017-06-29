@@ -7,9 +7,9 @@ Latest build:
 
 ```
 $ rustc -V
-rustc 1.18.0-nightly (252d3da8a 2017-04-22)
+rustc 1.20.0-nightly (69c65d296 2017-06-28)
 $ cargo -V
-cargo 0.19.0-nightly (8326a3683 2017-04-19)
+cargo 0.21.0-nightly (abf01e1ed 2017-06-25)
 ```
 
 Thanks to Kevin Mehall: https://gist.github.com/kevinmehall/16e8b3ea7266b048369d
