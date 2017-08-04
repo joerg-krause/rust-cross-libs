@@ -125,7 +125,9 @@ mkdir -p $BUILD/libbacktrace
 mv ${BUILD}/libbacktrace/.libs/libbacktrace.a ${BUILD}
 
 if [ "$PANIC_STRATEGY" = "unwind" ]; then
-	export FEATURES="backtrace panic_unwind"
+	export FEATURES="jemalloc backtrace panic_unwind"
+else
+	export FEATURES="jemalloc"
 fi
 
 (cd ${RUST_GIT}/src/libstd &&
