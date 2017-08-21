@@ -41,8 +41,6 @@
   "late-link-args": [],
   "archive-format": "gnu",
   "custom-unwind-resume": false,
-  "lib-allocation-crate": "alloc_system",
-  "exe-allocation-crate": "alloc_system",
   "allow-asm": true,
   "has-elf-tls": false,
   "panic-strategy": "abort"
