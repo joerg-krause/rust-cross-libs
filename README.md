@@ -52,7 +52,12 @@ Unfortunately, passing the JSON file path to `rustc` instead of using
 
 ### Define your custom target
 
-I will use a custom target `armv5te-unknown-linux-musleabi` to build a
+Note, that Rust already provides some targets by default, e.g.
+*armv5te-unknown-linux-gnueabi*. To allow using a custom ARMv5TE glibc-based
+target configuration we need to use a different triple name:
+*armv5te-rcross-linux-gnueabi*.
+
+I will use a custom target `armv5te-rcross-linux-musleabi` to build a
 cross-compiled *"Hello, World!"* for an ARMv5TE soft-float target. Note that
 the provided JSON file defines every possible value you can with the current
 Rust nightly version.
@@ -86,16 +91,16 @@ Define your host, e.g. for a x64 linux host:
 
 Define your target triple, cross-compiler, and CFLAGS.
 
-*armv5te-unknown-linux-musleabi*
+*armv5te-rcross-linux-musleabi*
 
-    $ export TARGET=armv5te-unknown-linux-musleabi
+    $ export TARGET=armv5te-rcross-linux-musleabi
     $ export CC=/usr/local/bin/arm-linux-gcc
     $ export AR=/usr/local/bin/arm-linux-ar
     $ export CFLAGS="-Wall -Os -fPIC -D__arm__ -mfloat-abi=soft"
 
-*armv7a-unknown-linux-musleabihf*
+*armv7a-rcross-linux-musleabihf*
 
-    $ export TARGET=armv7a-unknown-linux-musleabihf
+    $ export TARGET=armv7a-rcross-linux-musleabihf
     $ export CC=/usr/local/bin/arm-unknown-linux-musleabihf-gcc
     $ export AR=/usr/local/bin/arm-unknown-linux-musleabihf-ar
     $ export CFLAGS="-Wall -Os -fPIC -D__arm__ -mfloat-abi=hard"
@@ -114,7 +119,7 @@ If your target uses the *abort* panic strategy, no additional parameter is requi
 
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json
     [..]
-    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
+    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-rcross-linux-musleabi/lib
 
 #### Panic strategy: Unwind
 
@@ -124,7 +129,7 @@ For now, the build script needs to know when to build the std library with the
 
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json --panic=unwind
     [..]
-    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-unknown-linux-musleabi/lib
+    Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-rcross-linux-musleabi/lib
 
 ## Cross-compile with Cargo
 
@@ -139,7 +144,7 @@ libraries.
 To allow using a sysroot directory with Cargo lets create an executable shell
 script.
 
-Example for *armv5te-unknown-linux-musleabi* target:
+Example for *armv5te-rcross-linux-musleabi* target:
 
 ```
 $ cat /usr/local/bin/arm-unknown-linux-musl-sysroot
@@ -152,7 +157,7 @@ SYSROOT=$HOME/buildroot/output/host/usr/arm-buildroot-linux-musleabi/sysroot
 $ chmod +x /usr/local/bin/arm-unknown-linux-musl-sysroot
 ```
 
-Example for *armv7a-unknown-linux-musleabihf* target:
+Example for *armv7a-rcross-linux-musleabihf* target:
 
 ```
 $ cat /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
@@ -173,11 +178,11 @@ Now we can tell Cargo to use this shell script when linking:
 
 ```
 $ cat ~/.cargo/config
-[target.armv5te-unknown-linux-musleabi]
+[target.armv5te-rcross-linux-musleabi]
 linker = "/usr/local/bin/arm-unknown-linux-musl-sysroot"
 ar = "/usr/local/bin/arm-linux-ar"
 
-[target.armv7a-unknown-linux-musleabihf]
+[target.armv7a-rcross-linux-musleabihf]
 linker = "/usr/local/bin/arm-unknown-linux-musleabihf-sysroot"
 ar = "/usr/local/bin/arm-unknown-linux-musleabihf-ar"
 ```
@@ -196,8 +201,8 @@ Cargo the hello example app:
 Check:
 
     $ file target/$TARGET/release/hello
-    target/armv5te-unknown-linux-musleabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-arm.so.1, not stripped
+    target/armv5te-rcross-linux-musleabi/release/hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-arm.so.1, not stripped
 
     $ arm-linux-size target/$TARGET/release/hello
        text	   data	    bss	    dec	    hex	filename
-      59962	   1924	    132	  62018	   f242	target/armv5te-unknown-linux-musleabi/release/hello
+      59962	   1924	    132	  62018	   f242	target/armv5te-rcross-linux-musleabi/release/hello
