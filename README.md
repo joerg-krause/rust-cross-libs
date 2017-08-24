@@ -216,8 +216,8 @@ For now, the build script needs to know when to build the std library with the
 
 ## Hello, world!
 
-Export the path to your host Rust binaries and libraries as well as the path to
-your custom target JSON file:
+Make sure you've followed the preparation and defined your Rust environment
+(PATH, LD_LIBRARY_PATH, RUST_TARGET_PATH).
 
 Cargo the hello example app:
 
