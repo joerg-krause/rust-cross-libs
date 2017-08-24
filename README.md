@@ -1,7 +1,7 @@
 # rust-cross-libs
 
-Cross-compile the Rust standard library for unsupported targets without a
-full bootstrap build.
+Cross-compile the Rust standard library for custom targets without a full
+bootstrap build.
 
 Latest build:
 
@@ -16,8 +16,20 @@ Thanks to Kevin Mehall: https://gist.github.com/kevinmehall/16e8b3ea7266b048369d
 
 ## Introduction
 
-This guide assumes you are using an x64_86 host to cross-compile the Rust
-`std` library to an unsupported target, e.g. ARMv5.
+Although Rust already supports cross-compiling for a great number of targets,
+it is tedious to do a full bootstrap build.
+
+Furthermore, the built-in target configurations may not use the best compiler
+settings. For example the *armv7_unknown_linux_musleabihf* target defines
+"cortex-a8" as cpu and "vfp3" as feature, but there is no target for "cortex-a7"
+and "vfp4".
+
+The is a guide to help your cross-compiling the Rust `std` library for your
+very own custom target. Example configurations are given for an ARMv5TE and a 
+ARMv7-A target using a glibc- or musl-based toolchain.
+
+Note, that for now only dynamic linking is supported. Building a statically
+linked executable with a musl-based toolchain is in work.
 
 ### Using custom targets
 
