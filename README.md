@@ -50,6 +50,31 @@ Unfortunately, passing the JSON file path to `rustc` instead of using
 
 ## Preparation
 
+### Get a cross-compiler
+
+As we are cross-compiling the Rust libraries we need a cross-compiler, of
+course. I am using [Buildroot](https://buildroot.org/), which is a
+great tool for generating embedded Linux systems and toolchains for
+cross-compilation.
+
+How-to build a toolchain with Buildroot is out of scope. You can simply use the
+output path of the Buildroot host build directory or copy the entire folder to
+wherever you want the toolchain to be. The example configuration in this
+setup assume the toolchain is located in `$HOME/buildroot/output/host`.
+
+For easier use of the toolchain tools, some symlinks are created in
+`/usr/local/bin`:
+
+```
+sudo ln -s $HOME/buildroot/output/host/arm-buildroot-linux-musleabi/bin/arm-buildroot-linux-musleabi-gcc.br_real /usr/local/bin/arm-unknown-linux-musleabi-gcc
+sudo ln -s $HOME/buildroot/output/host/arm-buildroot-linux-musleabi/bin/arm-buildroot-linux-musleabi-ar /usr/local/bin/arm-unknown-linux-musleabi-ar
+sudo ln -s $HOME/buildroot/output/host/arm-buildroot-linux-musleabi/bin/arm-buildroot-linux-musleabi-size /usr/local/bin/arm-unknown-linux-musleabi-size
+[..]
+```
+
+Note, that the setup of the toolchain is totally up to you. The only requirement
+is that is supports using a sysroot.
+
 ### Define your custom target
 
 Note, that Rust already provides some targets by default, e.g.
@@ -72,12 +97,10 @@ all the example targets.
 Rust uses Cargo to compile the Rust libraries.
 
 For cross-compiling with Cargo we need to make sure to link with the target
-libraries and not with the host ones. [Buildroot](https://buildroot.org/) is a
-great tool for generating embedded Linux system and toolchains for
-cross-compilation.
-
-The `sysroot` directory from the Buildroot output directory is used for linking
-with the target libraries.
+libraries and not with the host ones. The `sysroot` directory from the
+Buildroot output directory is used for linking with the target libraries. If
+this is not done correctly, you will end up with "Relocations in generic ELF"
+errors.
 
 #### Sysroot
 
