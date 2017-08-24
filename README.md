@@ -106,6 +106,19 @@ $ chmod +x /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
 
 ```
 
+Example for *armv5te-rcross-linux-gnueabi* target:
+
+```
+$ cat /usr/local/bin/arm-unknown-linux-gnueabi-sysroot
+#!/bin/bash
+
+SYSROOT=$HOME/buildroot/output/host/arm-buildroot-linux-gnueabi/sysroot
+
+/usr/local/bin/arm-unknown-linux-gnueabi-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
+
+$ chmod +x /usr/local/bin/arm-unknown-linux-gnueabi-sysroot
+```
+
 #### Cargo config
 
 Now we can tell Cargo to use this shell script when linking:
@@ -119,6 +132,10 @@ ar = "/usr/local/bin/arm-unknown-linux-musleabi-ar"
 [target.armv7a-rcross-linux-musleabihf]
 linker = "/usr/local/bin/arm-unknown-linux-musleabihf-sysroot"
 ar = "/usr/local/bin/arm-unknown-linux-musleabihf-ar"
+
+[target.armv5te-rcross-linux-gnueabi]
+linker = "/usr/local/bin/arm-unknown-linux-gnueabi-sysroot"
+ar = "/usr/local/bin/arm-unknown-linux-gnueabi-ar"
 ```
 
 ### Get Rust sources and binaries
