@@ -62,6 +62,65 @@ cross-compiled *"Hello, World!"* for an ARMv5TE soft-float target. Note that
 the provided JSON file defines every possible value you can with the current
 Rust nightly version.
 
+### Cross-compiling with Cargo
+
+Rust uses Cargo to compile the Rust libraries.
+
+For cross-compiling with Cargo we need to make sure to link with the target
+libraries and not with the host ones. [Buildroot](https://buildroot.org/) is a
+great tool for generating embedded Linux system and toolchains for
+cross-compilation.
+
+The `sysroot` directory from the Buildroot output directory is used for linking
+with the target libraries.
+
+#### Sysroot
+
+To allow using a sysroot directory with Cargo lets create an executable shell
+script.
+
+Example for *armv5te-rcross-linux-musleabi* target:
+
+```
+$ cat /usr/local/bin/arm-unknown-linux-musleabi-sysroot
+#!/bin/bash
+
+SYSROOT=$HOME/buildroot/output/host/arm-buildroot-linux-musleabi/sysroot
+
+/usr/local/bin/arm-unknown-linux-musleabi-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
+
+$ chmod +x /usr/local/bin/arm-unknown-linux-musl-sysroot
+```
+
+Example for *armv7a-rcross-linux-musleabihf* target:
+
+```
+$ cat /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
+#!/bin/bash
+
+SYSROOT=$HOME/buildroot/output/host/arm-buildroot-linux-musleabihf/sysroot
+
+/usr/local/bin/arm-unknown-linux-musleabihf-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
+
+$ chmod +x /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
+
+```
+
+#### Cargo config
+
+Now we can tell Cargo to use this shell script when linking:
+
+```
+$ cat ~/.cargo/config
+[target.armv5te-rcross-linux-musleabi]
+linker = "/usr/local/bin/arm-unknown-linux-musleabi-sysroot"
+ar = "/usr/local/bin/arm-unknown-linux-musleabi-ar"
+
+[target.armv7a-rcross-linux-musleabihf]
+linker = "/usr/local/bin/arm-unknown-linux-musleabihf-sysroot"
+ar = "/usr/local/bin/arm-unknown-linux-musleabihf-ar"
+```
+
 ### Get Rust sources and binaries
 
 We fetch the Rust sources from github and get the binaries from the latest
@@ -94,8 +153,8 @@ Define your target triple, cross-compiler, and CFLAGS.
 *armv5te-rcross-linux-musleabi*
 
     $ export TARGET=armv5te-rcross-linux-musleabi
-    $ export CC=/usr/local/bin/arm-linux-gcc
-    $ export AR=/usr/local/bin/arm-linux-ar
+    $ export CC=/usr/local/bin/arm-unknown-linux-musleabi-gcc
+    $ export AR=/usr/local/bin/arm-unknown-linux-musleabi-ar
     $ export CFLAGS="-Wall -Os -fPIC -D__arm__ -mfloat-abi=soft"
 
 *armv7a-rcross-linux-musleabihf*
@@ -130,62 +189,6 @@ For now, the build script needs to know when to build the std library with the
     $ ./rust-cross-libs.sh --rust-prefix=$PWD/rust --rust-git=$PWD/rust-git --target=$PWD/cfg/$TARGET.json --panic=unwind
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-rcross-linux-musleabi/lib
-
-## Cross-compile with Cargo
-
-For cross-compiling with Cargo we need to make sure to link with the target
-libraries and not with the host ones. [Buildroot](https://buildroot.org/) is a
-great tool for generating embedded Linux system. The `sysroot` directory
-from the Buildroot output directory is used for linking with the target
-libraries.
-
-### Sysroot
-
-To allow using a sysroot directory with Cargo lets create an executable shell
-script.
-
-Example for *armv5te-rcross-linux-musleabi* target:
-
-```
-$ cat /usr/local/bin/arm-unknown-linux-musl-sysroot
-#!/bin/bash
-
-SYSROOT=$HOME/buildroot/output/host/usr/arm-buildroot-linux-musleabi/sysroot
-
-/usr/local/bin/arm-linux-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
-
-$ chmod +x /usr/local/bin/arm-unknown-linux-musl-sysroot
-```
-
-Example for *armv7a-rcross-linux-musleabihf* target:
-
-```
-$ cat /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
-#!/bin/bash
-
-SYSROOT=/home/joerg/Development/git/buildroot/output/host/usr/arm-buildroot-linux-musleabihf/sysroot
-#SYSROOT=/home/joerg/Development/git/buildroot/output/host/usr/arm-buildroot-linux-musleabihf/sysroot
-
-/usr/local/bin/arm-unknown-linux-musleabihf-gcc --sysroot=$SYSROOT $(echo "$@" | sed 's/-L \/usr\/lib //g')
-
-$ chmod +x /usr/local/bin/arm-unknown-linux-musleabihf-sysroot
-
-```
-
-### Cargo config
-
-Now we can tell Cargo to use this shell script when linking:
-
-```
-$ cat ~/.cargo/config
-[target.armv5te-rcross-linux-musleabi]
-linker = "/usr/local/bin/arm-unknown-linux-musl-sysroot"
-ar = "/usr/local/bin/arm-linux-ar"
-
-[target.armv7a-rcross-linux-musleabihf]
-linker = "/usr/local/bin/arm-unknown-linux-musleabihf-sysroot"
-ar = "/usr/local/bin/arm-unknown-linux-musleabihf-ar"
-```
 
 ## Hello, world!
 
