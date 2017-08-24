@@ -57,10 +57,15 @@ Note, that Rust already provides some targets by default, e.g.
 target configuration we need to use a different triple name:
 *armv5te-rcross-linux-gnueabi*.
 
-I will use a custom target `armv5te-rcross-linux-musleabi` to build a
-cross-compiled *"Hello, World!"* for an ARMv5TE soft-float target. Note that
-the provided JSON file defines every possible value you can with the current
-Rust nightly version.
+The `cfg` folder contains three example JSON files as starting point for your
+very own custom target configuration. Note that the provided configurations
+defines almost every possible value you can with the current Rust nightly
+version.
+
+I will use the custom target *armv5te-rcross-linux-musleabi* to build a
+cross-compiled *"Hello, World!"* with a musl-libc toolchain for an ARMv5TE
+soft-float target. However, the necessary configuration steps are given for
+all the example targets.
 
 ### Cross-compiling with Cargo
 
