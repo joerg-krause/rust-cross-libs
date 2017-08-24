@@ -183,13 +183,15 @@ Define your target triple, cross-compiler, and CFLAGS.
 
 Note, that you need to adjust these flags depending on your custom target.
 
-### Run the script
+## Run the script
+
+Make sure you've followed the preparation.
 
 Two panic strategies are supported: abort and unwind. Although the panic strategy
 is already defined in the json target configuration, it is still necessary to take
 care of this setting.
 
-#### Panic strategy: Abort
+### Panic strategy: Abort
 
 If your target uses the *abort* panic strategy, no additional parameter is required:
 
@@ -197,7 +199,7 @@ If your target uses the *abort* panic strategy, no additional parameter is requi
     [..]
     Libraries are in /home/joerg/rust-cross-libs/rust/lib/rustlib/armv5te-rcross-linux-musleabi/lib
 
-#### Panic strategy: Unwind
+### Panic strategy: Unwind
 
 For now, the build script needs to know when to build the std library with the
 *panic_unwind* strategy and the backtrace feature. Therefor, setting 
