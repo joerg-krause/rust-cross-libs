@@ -7,7 +7,7 @@ Latest build:
 
 ```
 $ rustc -V
-rustc 1.21.0-nightly (8c303ed87 2017-08-20)
+rustc 1.21.0-nightly (2bb8fca18 2017-08-23)
 $ cargo -V
 cargo 0.22.0-nightly (7704f7b1f 2017-08-09)
 ```
