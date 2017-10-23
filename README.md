@@ -186,8 +186,8 @@ snapshot to run on the host, e.g. for x86_64-unknown-linux-gnu:
     $ git clone https://github.com/joerg-krause/rust-cross-libs.git
     $ cd rust-cross-libs
     $ git clone https://github.com/rust-lang/rust rust-git
-    $ wget https://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz
-    $ tar xf rust-nightly-x86_64-unknown-linux-gnu.tar.gz
+    $ wget https://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.xz
+    $ tar xJf rust-nightly-x86_64-unknown-linux-gnu.tar.xz
     $ rust-nightly-x86_64-unknown-linux-gnu/install.sh --prefix=$PWD/rust
 
 ### Define the Rust environment
