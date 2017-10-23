@@ -4,6 +4,7 @@
   "llvm-target": "armv5te-unknown-linux-musl",
   "target-endian": "little",
   "target-pointer-width": "32",
+  "target-c-int-width": "32",
   "os": "linux",
   "env": "musl",
   "vendor": "unknown",

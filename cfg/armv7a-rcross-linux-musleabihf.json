@@ -4,6 +4,7 @@
   "llvm-target": "armv7a-unknown-linux-musleabihf",
   "target-endian": "little",
   "target-pointer-width": "32",
+  "target-c-int-width": "32",
   "os": "linux",
   "env": "musl",
   "vendor": "unknown",
