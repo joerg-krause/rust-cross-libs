@@ -91,10 +91,11 @@ git checkout ${RUST_VERSION} || (git fetch; git checkout ${RUST_VERSION})
 git submodule update --init src/jemalloc \
 			    src/libcompiler_builtins \
 			    src/liblibc \
-			    src/tools/rust-installer \
 			    src/tools/cargo \
 			    src/tools/clippy \
-			    src/tools/rls
+			    src/tools/rls \
+			    src/tools/rust-installer \
+			    src/tools/rustfmt
 
 # Fetch compiler-rt
 (cd ${RUST_GIT}/src/libcompiler_builtins &&
