@@ -1,0 +1,44 @@
+From e2606cbdb5825d10f2933a9cd29cfe3662eafc69 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=B6rg=20Krause?= <joerg.krause@embedded.rocks>
+Date: Mon, 23 Oct 2017 21:29:10 +0200
+Subject: [PATCH] libunwind: do not link libc statically for ARM musl
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Jörg Krause <joerg.krause@embedded.rocks>
+---
+ src/libunwind/build.rs | 3 ++-
+ src/libunwind/lib.rs   | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/libunwind/build.rs b/src/libunwind/build.rs
+index dc1464b905..d4a2a47dff 100644
+--- a/src/libunwind/build.rs
++++ b/src/libunwind/build.rs
+@@ -15,7 +15,8 @@ fn main() {
+     let target = env::var("TARGET").expect("TARGET was not set");
+ 
+     if target.contains("linux") {
+-        if target.contains("musl") && !target.contains("mips") {
++        if target.contains("musl") && !target.contains("mips")
++                                   && !target.contains("arm") {
+             // musl is handled in lib.rs
+         } else if !target.contains("android") {
+             println!("cargo:rustc-link-lib=gcc_s");
+diff --git a/src/libunwind/lib.rs b/src/libunwind/lib.rs
+index 461b49aa36..2c49bc38d2 100644
+--- a/src/libunwind/lib.rs
++++ b/src/libunwind/lib.rs
+@@ -28,7 +28,7 @@ mod libunwind;
+ #[cfg(not(target_env = "msvc"))]
+ pub use libunwind::*;
+ 
+-#[cfg(all(target_env = "musl", not(target_arch = "mips")))]
++#[cfg(all(target_env = "musl", not(target_arch = "mips"), not(target_arch = "arm")))]
+ #[link(name = "unwind", kind = "static", cfg(target_feature = "crt-static"))]
+ #[link(name = "gcc_s", cfg(not(target_feature = "crt-static")))]
+ extern {}
+-- 
+2.14.2
+

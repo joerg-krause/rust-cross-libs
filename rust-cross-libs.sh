@@ -106,6 +106,10 @@ git submodule update --init src/jemalloc \
 (cd ${RUST_GIT}/src/liblibc &&
 	git am ${TOPDIR}/patch/liblibc/*
 )
+# Patch libunwind
+(cd ${RUST_GIT}/src/libunwind &&
+	git am ${TOPDIR}/patch/libunwind/*
+)
 
 # Build libbacktrace
 rm -rf ${BUILD}/libbacktrace
