@@ -93,6 +93,7 @@ git submodule update --init src/jemalloc \
 			    src/liblibc \
 			    src/tools/rust-installer \
 			    src/tools/cargo \
+			    src/tools/clippy \
 			    src/tools/rls
 
 # Fetch compiler-rt
